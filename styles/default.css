@@ -1,0 +1,19 @@
+
+.container {}
+.container .game {
+	border: 5px solid #000000;
+	height: 600px;
+	margin: 25px auto;
+	width: 600px;
+}
+.container .game .world {
+	position: relative;
+}
+.container .game .world .player {
+	background-color: #FF0000;
+	height: 40px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 40px;
+}
