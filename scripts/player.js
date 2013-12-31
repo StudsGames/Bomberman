@@ -7,7 +7,7 @@ var Player = function(el, game) {
 Player.prototype.reset = function () {
 	this.pos = { x: 15, y: 15 };
 	this.vel = { x: 0, y: 0 };
-	this.tile = 0;
+	this.skin = 0;
 };
 
 Player.prototype.onFrame = function(delta) {
@@ -31,21 +31,20 @@ Player.prototype.onFrame = function(delta) {
 	// TODO: collision detection on boxes
 	
 	
-	// Select correct player tile
-	var lastTile = this.tile;
+	// Select correct player skin
+	var lastSkin = this.skin;
 	
-	if (controls.inputVec.y < 0 && this.tile !== 0) this.tile = 0;
-	else if (controls.inputVec.x > 0 && this.tile !== 1) this.tile = 1;
-	else if (controls.inputVec.y > 0 && this.tile !== 2) this.tile = 2;
-	else if (controls.inputVec.x < 0 && this.tile !== 3) this.tile = 3;
+	if (controls.inputVec.y < 0) this.skin = 0;
+	else if (controls.inputVec.x > 0) this.skin = 1;
+	else if (controls.inputVec.y > 0) this.skin = 2;
+	else if (controls.inputVec.x < 0) this.skin = 3;
 	
-	if (lastTile !== this.tile) {
-		console.log('toggleClass');
-		this.el.toggleClass('face-north', this.tile === 0);
-		this.el.toggleClass('face-east', this.tile === 1);
-		this.el.toggleClass('face-south', this.tile === 2);
-		this.el.toggleClass('face-west', this.tile === 3);
-		lastTile = this.tile;
+	if (lastSkin !== this.skin) {
+		this.el.toggleClass('face-north', this.skin === 0);
+		this.el.toggleClass('face-east', this.skin === 1);
+		this.el.toggleClass('face-south', this.skin === 2);
+		this.el.toggleClass('face-west', this.skin === 3);
+		lastSkin = this.skin;
 	}
 	
 	
