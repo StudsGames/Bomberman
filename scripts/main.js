@@ -1,7 +1,9 @@
 
 // Global contants
 var PLAYER_SPEED = 400;
-var PLAYER_WIDTH = 80;
+var PLAYER_OFFSET = 15;
+
+var WORLD_SIZE = { height: $('.world').height(), width: $('.world').width() };
 
 // Global instants
 var controls;
