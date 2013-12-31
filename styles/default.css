@@ -27,3 +27,15 @@
 .container .game .world .player.face-east { background-position: -30px 0; }
 .container .game .world .player.face-south { background-position: -60px 0; }
 .container .game .world .player.face-west { background-position: -90px 0; }
+
+.box {
+	left: 0;
+	position: absolute;
+	top: 0;
+}
+.box.wall {
+	background: url("../images/wall.png") no-repeat scroll 0 0 transparent;
+}
+.box.crate {
+	background: url("../images/crate.png") no-repeat scroll 0 0 transparent;
+}

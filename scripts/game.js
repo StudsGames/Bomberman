@@ -7,7 +7,7 @@ var Game = function(el) {
 	
 	this.el = el;
 	this.player = new Player(this.el.find('.player'), this);
-	//this.platformsEl = el.find('.platforms');
+	this.boxesEl = el.find('.boxes');
 	//this.worldEl = el.find('.world');
 	
 	this.isPlaying = false;
@@ -20,8 +20,17 @@ var Game = function(el) {
  * Starts the game.
  */
 Game.prototype.start = function () {
+	// Clear all existing boxes
+	this.boxes = [];
+	this.boxesEl.html('');
+	
+	// Create new boxes
+	this.createBoxes();
+	// Restart player attributes
 	this.player.reset();
 	
+	
+	// Start game loop
 	this.unFreezeGame();
 };
 
@@ -48,6 +57,28 @@ Game.prototype.pause = function () {
 	else {
 		this.unFreezeGame();
 	}
+};
+
+Game.prototype.createBoxes = function () {
+	
+	// Walls
+	for (var i = 0; i < 6; i++) {
+		this.addBox(new Box({ x: 30, y: (60 * i + 30), width: 30, height: 30 }, 1));
+		this.addBox(new Box({ x: 90, y: (60 * i + 30), width: 30, height: 30 }, 1));
+		this.addBox(new Box({ x: 150, y: (60 * i + 30), width: 30, height: 30 }, 1));
+		this.addBox(new Box({ x: 210, y: (60 * i + 30), width: 30, height: 30 }, 1));
+		this.addBox(new Box({ x: 270, y: (60 * i + 30), width: 30, height: 30 }, 1));
+		this.addBox(new Box({ x: 330, y: (60 * i + 30), width: 30, height: 30 }, 1));
+	}
+	
+	// Crates
+	this.addBox(new Box({ x: 120, y: 30, width: 30, height: 30 }, 2));
+	
+};
+
+Game.prototype.addBox = function(box) {
+	this.boxes.push(box);
+	this.boxesEl.append(box.el);
 };
 
 /**
