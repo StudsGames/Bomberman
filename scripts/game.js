@@ -36,6 +36,9 @@ Game.prototype.start = function () {
 
 Game.prototype.freezeGame = function () {
 	this.isPlaying = false;
+	
+	// DEBUG
+	$('.debug-framerate').css('color', '#FF0000');
 };
 
 Game.prototype.unFreezeGame = function () {
@@ -46,6 +49,9 @@ Game.prototype.unFreezeGame = function () {
 		// Restart the onFrame loop
 		this.lastFrame = +new Date() / 1000;
 		requestAnimFrame(this.onFrame);
+		
+		// DEBUG
+		$('.debug-framerate').css('color', '#00AA00');
 	}
 };
 
@@ -72,7 +78,14 @@ Game.prototype.createBoxes = function () {
 	}
 	
 	// Crates
+	this.addBox(new Box({ x: 120, y: 0, width: 30, height: 30 }, 2));
+	this.addBox(new Box({ x: 150, y: 0, width: 30, height: 30 }, 2));
+	this.addBox(new Box({ x: 210, y: 0, width: 30, height: 30 }, 2));
+	this.addBox(new Box({ x: 240, y: 0, width: 30, height: 30 }, 2));
+	this.addBox(new Box({ x: 270, y: 0, width: 30, height: 30 }, 2));
+	
 	this.addBox(new Box({ x: 120, y: 30, width: 30, height: 30 }, 2));
+	this.addBox(new Box({ x: 180, y: 30, width: 30, height: 30 }, 2));
 	
 };
 
@@ -84,6 +97,8 @@ Game.prototype.addBox = function(box) {
 /**
  * Runs every frame. Calculates a delta and allows each game entity to update itself.
  */
+var debugFrames = 0;
+var debugDeltaSum = 0;
 Game.prototype.onFrame = function () {
 	
 	// Enable freeze/pause feature
@@ -99,6 +114,19 @@ Game.prototype.onFrame = function () {
 	// Calling other onFrame functions
 	controls.onFrame(delta);
 	this.player.onFrame(delta);
+	
+	// DEBUG start
+	debugDeltaSum += delta;
+	debugFrames++;
+	
+	if (debugDeltaSum > 1) {
+		// Display frames
+		debugUpdateFramerate(debugFrames);
+		// Reset frame counter
+		debugDeltaSum = 0;
+		debugFrames = 0;
+	}
+	// DEBUG stop
 	
 	// Request next frame.
 	requestAnimFrame(this.onFrame);

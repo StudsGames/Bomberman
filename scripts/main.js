@@ -18,3 +18,12 @@ $(document).ready(function () {
 	game.start();
 	
 });
+
+var showLiveness = false;
+function debugUpdateFramerate(frames)
+{
+	var liveness = (showLiveness ? '.' : '');
+	$('.debug-framerate').html(frames + liveness);
+	
+	showLiveness = !showLiveness;
+}

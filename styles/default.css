@@ -39,3 +39,14 @@
 .box.crate {
 	background: url("../images/crate.png") no-repeat scroll 0 0 transparent;
 }
+
+
+
+/* DEBUG CSS */
+
+.debug-framerate {
+	font-size: 40px;
+	left: 10px;
+	position: absolute;
+	top: 10px;
+}
