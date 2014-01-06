@@ -3,6 +3,7 @@ var Box = function(rect, type) {
 	
 	this.rect = rect;
 	this.rect.right = rect.x + rect.width;
+	this.rect.bottom = rect.y + rect.height;
 	
 	if (type === 1) {
 		this.el = $('<div class="box wall">');

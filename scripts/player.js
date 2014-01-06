@@ -1,5 +1,5 @@
 
-var Player = function(el, game) {
+var Player = function (el, game) {
 	this.el = el;
 	this.game = game;
 };
@@ -10,7 +10,7 @@ Player.prototype.reset = function () {
 	this.skin = 0;
 };
 
-Player.prototype.onFrame = function(delta) {
+Player.prototype.onFrame = function (delta) {
 	
 	// Player input
 	this.vel.x = controls.inputVec.x * PLAYER_SPEED;
@@ -23,12 +23,8 @@ Player.prototype.onFrame = function(delta) {
 	
 	
 	// Collision detection
-	if ((this.pos.x - PLAYER_OFFSET) < 0) this.pos.x = PLAYER_OFFSET;
-	if ((this.pos.y - PLAYER_OFFSET) < 0) this.pos.y = PLAYER_OFFSET;
-	if ((this.pos.x + PLAYER_OFFSET) > WORLD_SIZE.width) this.pos.x = (WORLD_SIZE.width - PLAYER_OFFSET);
-	if ((this.pos.y + PLAYER_OFFSET) > WORLD_SIZE.height) this.pos.y = (WORLD_SIZE.height - PLAYER_OFFSET);
-	
-	// TODO: collision detection on boxes
+	this.pos = this.worldCollisionDetection(this.pos);
+	this.pos = this.boxesCollisionDetection(this.pos);
 	
 	
 	// Select correct player skin
@@ -52,4 +48,54 @@ Player.prototype.onFrame = function(delta) {
 	this.el.css('transform', 'translate3d(' + this.pos.x + 'px,' + this.pos.y + 'px,0)');
 	
 	
+};
+
+Player.prototype.worldCollisionDetection = function (pos) {
+	
+	if ((pos.x - PLAYER_OFFSET) < 0) pos.x = PLAYER_OFFSET;
+	if ((pos.y - PLAYER_OFFSET) < 0) pos.y = PLAYER_OFFSET;
+	if ((pos.x + PLAYER_OFFSET) > WORLD_SIZE.width) pos.x = (WORLD_SIZE.width - PLAYER_OFFSET);
+	if ((pos.y + PLAYER_OFFSET) > WORLD_SIZE.height) pos.y = (WORLD_SIZE.height - PLAYER_OFFSET);
+	
+	return pos;
+};
+
+Player.prototype.boxesCollisionDetection = function(pos) {
+	
+	// Cache player rect position
+	var pBottom = pos.y + PLAYER_OFFSET;
+	var pTop = pos.y - PLAYER_OFFSET;
+	var pRight = pos.x + PLAYER_OFFSET;
+	var pLeft = pos.x - PLAYER_OFFSET;
+	
+	this.game.forEachBox(function(b) {
+		
+		// Check for collision (from section 'Bounding box test' here: http://devmag.org.za/2009/04/13/basic-collision-detection-in-2d-part-1/ )
+		var isCollision = !((pBottom <= b.rect.y) || (pTop >= b.rect.bottom) || (pRight <= b.rect.x) || (pLeft >= b.rect.right));
+		
+		// If collision then find the best position and move player to that position
+		if (isCollision)
+		{
+			// Calculate all 4 position options
+			var posY1 = b.rect.y - PLAYER_OFFSET;
+			var posY2 = b.rect.bottom + PLAYER_OFFSET;
+			var posX1 = b.rect.x - PLAYER_OFFSET;
+			var posX2 = b.rect.right + PLAYER_OFFSET;
+			
+			// Calucate distance
+			var posLenY1 = Math.abs(posY1 - pBottom);
+			var posLenY2 = Math.abs(posY2 - pTop);
+			var posLenX1 = Math.abs(posX1 - pRight);
+			var posLenX2 = Math.abs(posX2 - pLeft);
+			
+			// Find shortest distance and move player to that distance
+			var shortestLen = Math.min(posLenY1, posLenY2, posLenX1, posLenX2);
+			if (shortestLen === posLenY1) pos.y = posY1;
+			else if (shortestLen === posLenY2) pos.y = posY2;
+			else if (shortestLen === posLenX1) pos.x = posX1;
+			else if (shortestLen === posLenX2) pos.x = posX2;
+		}
+	});
+	
+	return pos;
 };

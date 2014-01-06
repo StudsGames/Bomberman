@@ -132,6 +132,11 @@ Game.prototype.onFrame = function () {
 	requestAnimFrame(this.onFrame);
 };
 
+// Getter function to access this.boxes array
+Game.prototype.forEachBox = function(handler) {
+	this.boxes.forEach(handler);
+};
+
 /**
  * Cross browser RequestAnimationFrame
  */
