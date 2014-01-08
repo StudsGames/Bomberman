@@ -19,7 +19,7 @@ var Controls = function () {
 		.on('keyup', this.onKeyUp.bind(this));
 };
 
-Controls.prototype.onKeyDown = function(e) {
+Controls.prototype.onKeyDown = function (e) {
 	if (e.keyCode in KEYS && !this.keys[KEYS[e.keyCode]]) {
 		var keyName = KEYS[e.keyCode];
 		this.keys[keyName] = true;
@@ -28,7 +28,7 @@ Controls.prototype.onKeyDown = function(e) {
 	}
 };
 
-Controls.prototype.onKeyUp = function(e) {
+Controls.prototype.onKeyUp = function (e) {
 	if (e.keyCode in KEYS) {
 		var keyName = KEYS[e.keyCode];
 		this.keys[keyName] = false;

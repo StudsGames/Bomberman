@@ -4,6 +4,7 @@ var PLAYER_SPEED = 400;
 var PLAYER_OFFSET = 15;
 
 var WORLD_SIZE = { height: $('.world').height(), width: $('.world').width() };
+var TILE_SIZE = 30;
 
 // Global instants
 var controls;
@@ -17,6 +18,14 @@ $(document).ready(function () {
 	// Start the game
 	game.start();
 	
+	
+	// Debug
+	$('.debug-grids .grid').click(function () {
+		var coordinates = $(this).attr('class').replace('grid c','').replace(' r',',');
+		var x = coordinates.split(',')[0];
+		var y = coordinates.split(',')[1];
+		console.log('isTileAvailable(' + x + ',' + y + '):' + game.isTileAvailable(x,y));
+	});
 });
 
 var showLiveness = false;

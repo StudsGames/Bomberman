@@ -1,21 +1,25 @@
 
-var Box = function(rect, type) {
+var Box = function (rect, type) {
 	
+	// Initialize this.rect with only x and y coordinates
 	this.rect = rect;
-	this.rect.right = rect.x + rect.width;
-	this.rect.bottom = rect.y + rect.height;
+	this.rect.width = TILE_SIZE;
+	this.rect.height = TILE_SIZE;
+	this.rect.right = this.rect.x + this.rect.width;
+	this.rect.bottom = this.rect.y + this.rect.height;
 	
-	if (type === 1) {
+	this.type = type;
+	if (this.type === 1) {
 		this.el = $('<div class="box wall">');
 	}
-	else {//type === 2
+	else {//this.type === 2
 		this.el = $('<div class="box crate">');
 	}
 	
 	this.el.css({
-		left: rect.x,
-		top: rect.y,
-		width: rect.width,
-		height: rect.height
+		left: this.rect.x,
+		top: this.rect.y,
+		width: this.rect.width,
+		height: this.rect.height
 	});
 };

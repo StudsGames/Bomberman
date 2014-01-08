@@ -26,6 +26,9 @@ Player.prototype.onFrame = function (delta) {
 	this.pos = this.worldCollisionDetection(this.pos);
 	this.pos = this.boxesCollisionDetection(this.pos);
 	
+	// Debug
+	this.debugGridCollisionDetection(this.pos);
+	
 	
 	// Select correct player skin
 	var lastSkin = this.skin;
@@ -60,7 +63,7 @@ Player.prototype.worldCollisionDetection = function (pos) {
 	return pos;
 };
 
-Player.prototype.boxesCollisionDetection = function(pos) {
+Player.prototype.boxesCollisionDetection = function (pos) {
 	
 	// Cache player rect position
 	var pBottom = pos.y + PLAYER_OFFSET;
@@ -68,7 +71,7 @@ Player.prototype.boxesCollisionDetection = function(pos) {
 	var pRight = pos.x + PLAYER_OFFSET;
 	var pLeft = pos.x - PLAYER_OFFSET;
 	
-	this.game.forEachBox(function(b) {
+	this.game.forEachBox(function (b) {
 		
 		// Check for collision (from section 'Bounding box test' here: http://devmag.org.za/2009/04/13/basic-collision-detection-in-2d-part-1/ )
 		var isCollision = !((pBottom <= b.rect.y) || (pTop >= b.rect.bottom) || (pRight <= b.rect.x) || (pLeft >= b.rect.right));
@@ -98,4 +101,26 @@ Player.prototype.boxesCollisionDetection = function(pos) {
 	});
 	
 	return pos;
+};
+
+Player.prototype.debugGridCollisionDetection = function (pos) {
+	
+	// Cache player rect position
+	var pBottom = pos.y + PLAYER_OFFSET;
+	var pTop = pos.y - PLAYER_OFFSET;
+	var pRight = pos.x + PLAYER_OFFSET;
+	var pLeft = pos.x - PLAYER_OFFSET;
+	
+	$('.debug-grids .grid.here').removeClass('here');
+	this.game.forEachGrid(function (g) {
+		
+		// Check for collision (from section 'Bounding box test' here: http://devmag.org.za/2009/04/13/basic-collision-detection-in-2d-part-1/ )
+		var isCollision = !((pBottom <= g.rect.y) || (pTop >= g.rect.bottom) || (pRight <= g.rect.x) || (pLeft >= g.rect.right));
+		
+		// If collision then find the best position and move player to that position
+		if (isCollision)
+		{
+			g.el.toggleClass('here', true);
+		}
+	});
 };

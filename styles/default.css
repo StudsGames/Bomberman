@@ -29,9 +29,7 @@
 .container .game .world .player.face-west { background-position: -90px 0; }
 
 .box {
-	left: 0;
 	position: absolute;
-	top: 0;
 }
 .box.wall {
 	background: url("../images/wall.png") no-repeat scroll 0 0 transparent;
@@ -49,4 +47,18 @@
 	left: 10px;
 	position: absolute;
 	top: 10px;
+}
+.debug-grids {
+	height: 390px;
+	position: relative;
+	width: 390px;
+}
+.debug-grids .grid {
+	position: absolute;
+}
+.debug-grids .grid:hover {
+	border: 1px solid #FF0000;
+}
+.debug-grids .grid.here {
+	border: 1px solid #FF0000;
 }
