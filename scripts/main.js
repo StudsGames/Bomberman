@@ -5,6 +5,7 @@ var PLAYER_OFFSET = 15;
 
 var WORLD_SIZE = { height: $('.world').height(), width: $('.world').width() };
 var TILE_SIZE = 30;
+var TICKS_LENGTH = 0.2;
 
 // Global instants
 var controls;
@@ -32,7 +33,24 @@ var showLiveness = false;
 function debugUpdateFramerate(frames)
 {
 	var liveness = (showLiveness ? '.' : '');
-	$('.debug-framerate').html(frames + liveness);
-	
 	showLiveness = !showLiveness;
+	$('.debug .framerate span').html(frames + liveness);
+	
+	var totalWalls = 0;
+	var totalCrates = 0;
+	game.forEachBox(function (b) {
+		if (b.type === 1) totalWalls++;
+		else if (b.type === 2) totalCrates++;
+	});
+	$('.debug .walls span').html(totalWalls);
+	$('.debug .crates span').html(totalCrates);
+	
+	var totalBombs = 0;
+	var totalFires = 0;
+	game.forEachExplosion(function (e) {
+		if (e.type === 1) totalBombs++;
+		else if (e.type === 2) totalFires++;
+	});
+	$('.debug .bombs span').html(totalBombs);
+	$('.debug .fires span').html(totalFires);
 }

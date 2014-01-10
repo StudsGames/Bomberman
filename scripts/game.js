@@ -6,8 +6,9 @@
 var Game = function (el) {
 	
 	this.el = el;
-	this.player = new Player(this.el.find('.player'), this);
+	this.player = new Player(this.el.find('.player'));
 	this.boxesEl = el.find('.boxes');
+	this.explosionsEl = el.find('.explosions');
 	this.worldEl = el.find('.world');
 	this.debugGrids = [];
 	this.debugGridsEl = this.worldEl.append('<div class="debug-grids">').find('.debug-grids');
@@ -26,6 +27,10 @@ Game.prototype.start = function () {
 	this.boxes = [];
 	this.boxesEl.html('');
 	
+	// Clear all existing explosions
+	this.explosions = [];
+	this.explosionsEl.html('');
+	
 	// Create new boxes
 	this.createBoxes();
 	// Restart player attributes
@@ -40,7 +45,7 @@ Game.prototype.freezeGame = function () {
 	this.isPlaying = false;
 	
 	// DEBUG
-	$('.debug-framerate').css('color', '#FF0000');
+	$('.debug').css('color', '#FF0000');
 };
 
 Game.prototype.unFreezeGame = function () {
@@ -53,7 +58,7 @@ Game.prototype.unFreezeGame = function () {
 		requestAnimFrame(this.onFrame);
 		
 		// DEBUG
-		$('.debug-framerate').css('color', '#00AA00');
+		$('.debug').css('color', '#00AA00');
 	}
 };
 
@@ -72,9 +77,9 @@ Game.prototype.createBoxes = function () {
 	// Add walls like classic bomberman
 	for (var row = 0; row < 6; row++) {
 		for (var col = 0; col < 6; col++) {
-			var newX = this.tile(col * 2 + 1);
-			var newY = this.tile(row * 2 + 1);
-			this.addBox(new Box({ x: newX, y: newY }, 1));
+			var newCol = (col * 2) + 1;
+			var newRow = (row * 2) + 1;
+			this.addBox(new Box(newCol, newRow, 1));
 		}
 	}
 	
@@ -94,7 +99,7 @@ Game.prototype.createBoxes = function () {
 		}
 		
 		if (this.isTileAvailable(col,row))
-			this.addBox(new Box({ x: this.tile(col), y: this.tile(row) }, 2));
+			this.addBox(new Box(col, row, 2));
 	}
 	
 	
@@ -113,6 +118,21 @@ Game.prototype.createBoxes = function () {
 Game.prototype.addBox = function (box) {
 	this.boxes.push(box);
 	this.boxesEl.append(box.el);
+};
+
+// Getter function to access this.boxes array
+Game.prototype.forEachBox = function (handler) {
+	this.boxes.forEach(handler);
+};
+
+Game.prototype.addExplosion = function (explosions) {
+	this.explosions.push(explosions);
+	this.explosionsEl.append(explosions.el);
+};
+
+// Getter function to access this.explosions array
+Game.prototype.forEachExplosion = function (handler) {
+	this.explosions.forEach(handler);
 };
 
 /**
@@ -135,6 +155,17 @@ Game.prototype.onFrame = function () {
 	// Calling other onFrame functions
 	controls.onFrame(delta);
 	this.player.onFrame(delta);
+	// All bombs and fires
+	this.forEachExplosion(function (e) {
+		e.onFrame(delta);
+		// remove it from the array
+		if (e.type == 0) {
+			var eIndex = game.explosions.indexOf(e);
+			if (eIndex > -1) {
+				game.explosions.splice(eIndex, 1);
+			}
+		}
+	});
 	
 	// DEBUG start
 	debugDeltaSum += delta;
@@ -151,11 +182,6 @@ Game.prototype.onFrame = function () {
 	
 	// Request next frame.
 	requestAnimFrame(this.onFrame);
-};
-
-// Getter function to access this.boxes array
-Game.prototype.forEachBox = function (handler) {
-	this.boxes.forEach(handler);
 };
 
 
@@ -182,24 +208,42 @@ Game.prototype.forEachGrid = function (handler) {
 
 
 // Multiplay tile numer (column or row) by TILE_SIZE(30)
-Game.prototype.tile = function (tile) {
-	return tile * TILE_SIZE;
+Game.prototype.getPixels = function (tiles) {
+	return tiles * TILE_SIZE;
 };
+
+Game.prototype.getTiles = function (pixels) {
+	return Math.floor(pixels / 30.0);
+}
 
 // Check if tile is occupied, if it is it will return false
 Game.prototype.isTileAvailable = function (col, row) {
 	
-	var x = this.tile(col);
-	var y = this.tile(row);
+	var x = this.getPixels(col);
+	var y = this.getPixels(row);
 	var checkIsTileAvailable = true;
 	
-	this.forEachBox(function (b) {
-		if (b.rect.x <= x && b.rect.right > x &&
-			b.rect.y <= y && b.rect.bottom > y) {
-			
-			checkIsTileAvailable = false;
-		}
-	});
+	if (checkIsTileAvailable)
+	{
+		this.forEachExplosion(function (e) {
+			if (e.rect.x <= x && e.rect.right > x &&
+				e.rect.y <= y && e.rect.bottom > y) {
+				
+				checkIsTileAvailable = false;
+			}
+		});
+	}
+	
+	if (checkIsTileAvailable)
+	{
+		this.forEachBox(function (b) {
+			if (b.rect.x <= x && b.rect.right > x &&
+				b.rect.y <= y && b.rect.bottom > y) {
+				
+				checkIsTileAvailable = false;
+			}
+		});
+	}
 	
 	return checkIsTileAvailable;
 };

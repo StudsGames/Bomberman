@@ -1,7 +1,6 @@
 
-var Player = function (el, game) {
+var Player = function (el) {
 	this.el = el;
-	this.game = game;
 };
 
 Player.prototype.reset = function () {
@@ -15,6 +14,13 @@ Player.prototype.onFrame = function (delta) {
 	// Player input
 	this.vel.x = controls.inputVec.x * PLAYER_SPEED;
 	this.vel.y = controls.inputVec.y * PLAYER_SPEED;
+	
+	if (controls.keys.bomb) {
+		var col = game.getTiles(this.pos.x);
+		var row = game.getTiles(this.pos.y);
+		if (game.isTileAvailable(col,row))
+			game.addExplosion(new Explosion(col, row, 1));
+	}
 	
 	
 	// Player movement
@@ -71,7 +77,7 @@ Player.prototype.boxesCollisionDetection = function (pos) {
 	var pRight = pos.x + PLAYER_OFFSET;
 	var pLeft = pos.x - PLAYER_OFFSET;
 	
-	this.game.forEachBox(function (b) {
+	game.forEachBox(function (b) {
 		
 		// Check for collision (from section 'Bounding box test' here: http://devmag.org.za/2009/04/13/basic-collision-detection-in-2d-part-1/ )
 		var isCollision = !((pBottom <= b.rect.y) || (pTop >= b.rect.bottom) || (pRight <= b.rect.x) || (pLeft >= b.rect.right));
@@ -112,7 +118,7 @@ Player.prototype.debugGridCollisionDetection = function (pos) {
 	var pLeft = pos.x - PLAYER_OFFSET;
 	
 	$('.debug-grids .grid.here').removeClass('here');
-	this.game.forEachGrid(function (g) {
+	game.forEachGrid(function (g) {
 		
 		// Check for collision (from section 'Bounding box test' here: http://devmag.org.za/2009/04/13/basic-collision-detection-in-2d-part-1/ )
 		var isCollision = !((pBottom <= g.rect.y) || (pTop >= g.rect.bottom) || (pRight <= g.rect.x) || (pLeft >= g.rect.right));

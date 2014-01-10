@@ -1,8 +1,11 @@
 
-var Box = function (rect, type) {
+var Box = function (col, row, type) {
 	
 	// Initialize this.rect with only x and y coordinates
-	this.rect = rect;
+	this.rect = {
+		x: game.getPixels(col),
+		y: game.getPixels(row)
+	};
 	this.rect.width = TILE_SIZE;
 	this.rect.height = TILE_SIZE;
 	this.rect.right = this.rect.x + this.rect.width;

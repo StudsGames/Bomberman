@@ -1,4 +1,5 @@
 var KEYS = {
+	186: 'bomb',
 	32: 'space',
 	37: 'left',
 	38: 'up',

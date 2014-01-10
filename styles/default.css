@@ -28,21 +28,30 @@
 .container .game .world .player.face-south { background-position: -60px 0; }
 .container .game .world .player.face-west { background-position: -90px 0; }
 
-.box {
-	position: absolute;
-}
-.box.wall {
-	background: url("../images/wall.png") no-repeat scroll 0 0 transparent;
-}
-.box.crate {
-	background: url("../images/crate.png") no-repeat scroll 0 0 transparent;
-}
+.box { position: absolute; }
+.box.wall { background: url("../images/wall.png") no-repeat scroll 0 0 transparent; }
+.box.crate { background: url("../images/crate.png") no-repeat scroll 0 0 transparent; }
 
+.exp { position: absolute; }
+.exp.bomb { background: url("../images/bomb-blue.png") no-repeat scroll 0 0 transparent; }
+.exp.bomb.s1 { background-position: 0 0; }
+.exp.bomb.s2 { background-position: -30px 0; }
+.exp.bomb.s3 { background-position: -60px 0; }
+
+.exp.fire { background: url("../images/fire-blue.png") no-repeat scroll -60px -30px transparent; }
+.exp.fire.n1 { background-position: 0 0; }
+.exp.fire.n2 { background-position: -30px -30px; }
+.exp.fire.s1 { background-position: -30px 0; }
+.exp.fire.s2 { background-position: 0 -60px; }
+.exp.fire.e1 { background-position: -60px 0; }
+.exp.fire.e2 { background-position: -30px -60px; }
+.exp.fire.w1 { background-position: -60px -60px; }
+.exp.fire.w2 { background-position: 0 -30px; }
 
 
 /* DEBUG CSS */
 
-.debug-framerate {
+.debug {
 	font-size: 40px;
 	left: 10px;
 	position: absolute;
